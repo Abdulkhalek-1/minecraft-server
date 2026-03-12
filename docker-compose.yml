@@ -3,8 +3,11 @@ services:
     image: registry.gitlab.com/crafty-controller/crafty-4:latest
     container_name: minecraft-server
     restart: unless-stopped
+    env_file: .env
     environment:
       - TZ=${TZ:-UTC}
+      - CFG_SUPERUSER_USERNAME=${CRAFTY_ADMIN_USER:-admin}
+      - CFG_SUPERUSER_PASSWORD=${CRAFTY_ADMIN_PASS:?Set CRAFTY_ADMIN_PASS in .env}
     ports:
       - "25565:25565"       # Minecraft Java Edition
       - "19132:19132/udp"   # Minecraft Bedrock Edition (GeyserMC)
