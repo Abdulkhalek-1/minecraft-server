@@ -24,7 +24,9 @@ services:
       - "traefik.http.routers.minecraft.rule=Host(`minecraft.abdulkhalek.dev`)"
       - "traefik.http.routers.minecraft.entrypoints=websecure"
       - "traefik.http.routers.minecraft.middlewares=secure-strict@file"
-      - "traefik.http.services.minecraft.loadbalancer.server.port=8000"
+      - "traefik.http.services.minecraft.loadbalancer.server.port=8443"
+      - "traefik.http.services.minecraft.loadbalancer.server.scheme=https"
+      - "traefik.http.services.minecraft.loadbalancer.serversTransport=insecure-skip-verify@file"
       - "traefik.docker.network=gateway"
 
 networks:
