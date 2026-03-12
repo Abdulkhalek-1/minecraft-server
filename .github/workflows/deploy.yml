@@ -20,6 +20,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            git config --global --add safe.directory /opt/minecraft-server
             cd /opt/minecraft-server
             git fetch origin main
             git reset --hard origin/main
