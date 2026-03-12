@@ -1,0 +1,32 @@
+services:
+  crafty:
+    image: registry.gitlab.com/crafty-controller/crafty-4:latest
+    container_name: minecraft-server
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-UTC}
+    ports:
+      - "25565:25565"       # Minecraft Java Edition
+      - "19132:19132/udp"   # Minecraft Bedrock Edition (GeyserMC)
+    volumes:
+      - ./data/backups:/crafty/backups
+      - ./data/logs:/crafty/logs
+      - ./data/servers:/crafty/servers
+      - ./data/config:/crafty/app/config
+      - ./data/import:/crafty/import
+    networks:
+      - gateway
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.minecraft.rule=Host(`minecraft.abdulkhalek.dev`)"
+      - "traefik.http.routers.minecraft.entrypoints=websecure"
+      - "traefik.http.routers.minecraft.middlewares=secure-strict@file"
+      - "traefik.http.services.minecraft.loadbalancer.server.port=8443"
+      - "traefik.http.services.minecraft.loadbalancer.server.scheme=https"
+      - "traefik.http.serversTransports.minecraft-transport.insecureSkipVerify=true"
+      - "traefik.http.services.minecraft.loadbalancer.serversTransport=minecraft-transport@docker"
+      - "traefik.docker.network=gateway"
+
+networks:
+  gateway:
+    external: true
